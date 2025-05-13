@@ -2,8 +2,10 @@ FROM alpine:latest
 
 ARG VPXTOOL_VERSION=0.19.1
 
-RUN apk add --no-cache bash curl tar imagemagick libwebp-dev libjpeg
+RUN apk add --no-cache bash curl tar imagemagick libwebp-dev libjpeg openexr openexr-dev git gcc build-base libpng-dev libzip-dev zstd-dev zlib-dev bzip2-dev libxml2-dev libx11-dev libwmf-dev tiff-dev librsvg-dev libraw-dev openjpeg-dev libjxl-dev libltdl-static libtool libheif-dev ghostscript-dev fftw-dev cairo-dev
 
+RUN git clone https://github.com/ImageMagick/ImageMagick/
+RUN cd ImageMagick && git checkout tags/7.1.1-47 && ./configure --with-modules --with-rsvg=yes --with-wmf=yes --with-ltdl=yes --with-gslib=yes --with-fftw=yes && make && make install
 RUN ARCH=$(uname -m) && \
     if [ "$ARCH" = "x86_64" ]; then \
         TOOL_URL="https://github.com/francisdb/vpxtool/releases/download/v${VPXTOOL_VERSION}/vpxtool-Linux-x86_64-musl-v${VPXTOOL_VERSION}.tar.gz"; \
